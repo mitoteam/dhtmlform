@@ -2,15 +2,20 @@ package dhtmlform
 
 import (
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/mttools"
 )
 
 const textareaControlKind = "textarea"
 
 func init() {
 	RegisterFormControlHandler(textareaControlKind, &FormControlHandler{
-		RenderF: func(props mttools.Values) (out dhtml.HtmlPiece) {
-			out.Append("TEXTAREA!")
+		RenderF: func(control *FormControlElement) (out dhtml.HtmlPiece) {
+			tag := dhtml.NewTag("textarea").Append(control.GetValue())
+
+			out.Append(tag)
+
+			if !control.note.IsEmpty() {
+				out.Append(dhtml.Div().Class("fc-note").Append(control.note))
+			}
 
 			return out
 		},
