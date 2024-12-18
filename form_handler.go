@@ -48,7 +48,7 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 
 		//rebuilt flag can be set in SubmitF() so check it again
 		if !fd.rebuild {
-			delete(formDataStore, fd.build_id)
+			formDataStore.Remove(fd.build_id)
 
 			//check redirect (first from FormData, then from FormContext)
 			var redirectUrl = fd.redirectUrl
@@ -83,7 +83,7 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 	}
 
 	//save to store for rebuilds
-	formDataStore[fd.build_id] = fd
+	formDataStore.Set(fd)
 
 	form.Append(formBody)
 

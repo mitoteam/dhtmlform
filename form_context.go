@@ -60,8 +60,8 @@ func (fc *FormContext) getFormDataFromPOST() (fd *FormData) {
 	}
 
 	// check if build_id is in store
-	fd, ok := formDataStore[build_id]
-	if !ok {
+	fd = formDataStore.Get(build_id)
+	if fd == nil {
 		return nil
 	}
 

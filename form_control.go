@@ -29,6 +29,7 @@ type FormControlElement struct {
 	data FormControlData
 }
 
+// force interface implementation
 var _ dhtml.ElementI = (*FormControlElement)(nil)
 
 func NewFormControl(controlKind string, name string) *FormControlElement {

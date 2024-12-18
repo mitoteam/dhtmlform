@@ -4,6 +4,7 @@
         "dhtmlform",
         "mitoteam",
         "mttools",
+        "Storer",
         "textinput"
     ]
 }
