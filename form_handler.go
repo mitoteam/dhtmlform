@@ -23,17 +23,23 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 	if fd != nil { //found in POST values and data store
 		fd.redirectUrl = ""
 		fd.rebuild = false
-		fd.ClearErrors()
 
+		//basic internal validations (like required values)
+		fd.ClearErrors()
+		fd.validateFormControls()
+
+		// custom form handler validations
 		if fh.ValidateF != nil {
 			fh.ValidateF(fd)
 		}
 
+		// render errors if any
 		if fd.HasError() {
 			rootTag.Append(settings.FormErrorsRenderF(&fd.errors))
 			fd.rebuild = true //and display form again
 		}
 
+		// no rebuild requested, do submit
 		if !fd.rebuild {
 			if fh.SubmitF != nil {
 				fh.SubmitF(fd)

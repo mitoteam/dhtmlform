@@ -14,6 +14,9 @@ type FormControlHandler struct {
 
 	// [optional] preprocesses value from POST values
 	ProcessPostValueF func(rawValue any) any
+
+	// [optional] check preprocessed value, return (true, nil) or (false, <error output>)
+	//TODO: ValidateValueF func(value any) (ok bool, errorOut *dhtml.HtmlPiece)
 }
 
 var formControlHandlers map[string]*FormControlHandler

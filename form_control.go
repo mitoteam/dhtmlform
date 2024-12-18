@@ -10,7 +10,9 @@ type FormControlData struct {
 	controlKind string
 	label       dhtml.HtmlPiece
 	value       any
-	isError     bool
+	isRequired  bool // value should be set
+
+	isError bool //flag indicating control has some errors from validation
 }
 
 // creates a copy of FormControlData and returns its pointer
@@ -63,6 +65,19 @@ func (e *FormControlElement) GetLabel() *dhtml.HtmlPiece {
 	return &e.data.label
 }
 
+func (e *FormControlElement) IsError() bool {
+	return e.data.isError
+}
+
+func (e *FormControlElement) Required(b bool) *FormControlElement {
+	e.data.isRequired = b
+	return e
+}
+
+func (e *FormControlElement) IsRequired() bool {
+	return e.data.isRequired
+}
+
 func (e *FormControlElement) Note(v any) *FormControlElement {
 	e.note.Append(v)
 	return e
@@ -85,8 +100,14 @@ func (e *FormControlElement) GetTags() dhtml.TagList {
 }
 
 func (e *FormControlElement) renderLabel() *dhtml.LabelElement {
-	return dhtml.NewLabel().For(e.GetId()).Styles("font-weight: bolder; vertical-align: top").
+	labelElement := dhtml.NewLabel().For(e.GetId()).Styles("font-weight: bolder; vertical-align: top;").
 		Append(e.GetLabel())
+
+	if e.IsRequired() {
+		labelElement.Append(dhtml.Span().Styles("color: red;").Text("*"))
+	}
+
+	return labelElement
 }
 
 func (e *FormControlElement) renderNote() *dhtml.Tag {

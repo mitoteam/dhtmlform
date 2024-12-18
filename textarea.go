@@ -11,7 +11,7 @@ func init() {
 		RenderF: func(control *FormControlElement) (out dhtml.HtmlPiece) {
 			rootTag := dhtml.Div()
 
-			if control.data.isError {
+			if control.IsError() {
 				rootTag.Styles(errorBlockStyle)
 			}
 

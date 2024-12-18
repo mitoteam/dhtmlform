@@ -75,7 +75,7 @@ func (fd *FormData) SetRedirect(url string) {
 	fd.redirectUrl = url
 }
 
-func (fd *FormData) SetError(controlName string, v any) *FormData {
+func (fd *FormData) SetError(controlName string, v any) {
 	var controlErrors *FormControlErrors
 	var ok bool
 
@@ -92,23 +92,30 @@ func (fd *FormData) SetError(controlName string, v any) *FormData {
 	}
 
 	controlErrors.Errors = append(controlErrors.Errors, *dhtml.Piece(v))
-
-	return fd
 }
 
 func (fd *FormData) HasError() bool {
 	return len(fd.errors) > 0
 }
 
-func (fd *FormData) ClearErrors() *FormData {
+func (fd *FormData) ClearErrors() {
 	fd.errors = make(FormErrors) //new empty map
 
 	//clear controls error flags
 	for _, controlDataPtr := range fd.controlsData {
 		controlDataPtr.isError = false
 	}
+}
 
-	return fd
+// some common and very basic validations
+func (fd *FormData) validateFormControls() {
+	for controlName, controlDataPtr := range fd.controlsData {
+		if controlDataPtr.isRequired {
+			if mttools.IsEmpty(controlDataPtr.value) {
+				fd.SetError(controlName, "value is required")
+			}
+		}
+	}
 }
 
 // Walker function to set control values from FormData if form being rebuild after post
