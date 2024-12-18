@@ -18,7 +18,7 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 	rootTag := dhtml.Div().Class("dhtml-form")
 	var formBody dhtml.HtmlPiece
 
-	var fd = fc.formDataFromPOST()
+	var fd = fc.getFormDataFromPOST()
 
 	if fd != nil { //found in POST values and data store
 		fd.redirectUrl = ""
@@ -47,10 +47,10 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 
 			if redirectUrl != "" {
 				http.Redirect(fc.w, fc.r, redirectUrl, http.StatusSeeOther)
-				return dhtml.NewHtmlPiece() //empty html
+				return dhtml.NewHtmlPiece() //empty piece
 			}
 
-			//we are not rebuilding, not redirecting = new form should be built from scratch
+			//we are not rebuilding and not redirecting = new form should be built from scratch
 			fd = nil
 		}
 	}

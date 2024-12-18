@@ -78,3 +78,7 @@ func (e *FormControlElement) GetTags() dhtml.TagList {
 
 	return out.GetTags()
 }
+
+func (e *FormControlElement) renderLabel() *dhtml.LabelElement {
+	return dhtml.NewLabel().For(e.GetId()).Append(e.label)
+}

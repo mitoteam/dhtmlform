@@ -12,8 +12,7 @@ func init() {
 			rootTag := dhtml.Div()
 
 			if !control.label.IsEmpty() {
-				rootTag.Append(dhtml.NewTag("label").Attribute("for", control.GetId()).
-					Class("fc-label").Append(control.label))
+				rootTag.Append(control.renderLabel())
 			}
 
 			rootTag.Append(

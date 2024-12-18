@@ -51,7 +51,7 @@ func (fc *FormContext) SetRedirect(url string) *FormContext {
 
 // Check build_id in POST values, try to find form data in data store, re-hydrate it with submitted values and return.
 // Returns nil if there is no FormData to rebuild.
-func (fc *FormContext) formDataFromPOST() (fd *FormData) {
+func (fc *FormContext) getFormDataFromPOST() (fd *FormData) {
 	build_id := fc.r.PostFormValue(hiddenBuildIdFieldName)
 
 	// check if it is being re-build (from POST request)
