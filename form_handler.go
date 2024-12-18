@@ -30,7 +30,7 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 		}
 
 		if fd.HasError() {
-			//TODO: formOut.Append(settings.FormErrorsRendererF(fd))
+			rootTag.Append(settings.FormErrorsRenderF(&fd.errors))
 			fd.rebuild = true //and display form again
 		}
 

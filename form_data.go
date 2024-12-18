@@ -17,7 +17,7 @@ type FormData struct {
 	//list of all form controls data: control name => Control element
 	controlsData formControlsDataT
 
-	errors FormErrorsT
+	errors FormErrors
 
 	rebuild     bool   // flag to rebuild form with same data again
 	redirectUrl string // issue an redirect to this URL after processing
@@ -31,7 +31,7 @@ func NewFormData() *FormData {
 		args:         mttools.NewValues(),
 		params:       mttools.NewValues(),
 		controlsData: make(formControlsDataT),
-		errors:       make(FormErrorsT),
+		errors:       make(FormErrors),
 	}
 }
 
@@ -75,8 +75,24 @@ func (fd *FormData) SetRedirect(url string) {
 	fd.redirectUrl = url
 }
 
-func (fd *FormData) ClearErrors() *FormData {
-	fd.errors = make(FormErrorsT) //new empty map
+func (fd *FormData) SetError(controlName string, v any) *FormData {
+	var controlErrors *FormControlErrors
+	var ok bool
+
+	if controlErrors, ok = fd.errors[controlName]; !ok {
+		//no errors for this form control added yet
+		controlErrors = &FormControlErrors{}
+
+		if controlDataPtr, ok := fd.controlsData[controlName]; ok {
+			controlErrors.Label = controlDataPtr.label
+			controlDataPtr.isError = true
+		}
+
+		fd.errors[controlName] = controlErrors
+	}
+
+	controlErrors.Errors = append(controlErrors.Errors, *dhtml.Piece(v))
+
 	return fd
 }
 
@@ -84,11 +100,23 @@ func (fd *FormData) HasError() bool {
 	return len(fd.errors) > 0
 }
 
+func (fd *FormData) ClearErrors() *FormData {
+	fd.errors = make(FormErrors) //new empty map
+
+	//clear controls error flags
+	for _, controlDataPtr := range fd.controlsData {
+		controlDataPtr.isError = false
+	}
+
+	return fd
+}
+
 // Walker function to set control values from FormData if form being rebuild after post
 func (fd *FormData) processControlDataWalkerF(e dhtml.ElementI, args ...any) {
 	if control, ok := e.(*FormControlElement); ok {
 		if storedControlDataPtr, ok := fd.controlsData[control.name]; ok {
 			if storedControlDataPtr.controlKind == control.data.controlKind {
+				storedControlDataPtr.label = *control.GetLabel() //update label if changed since last build
 				control.data = *storedControlDataPtr
 			} else {
 				// kind does not match, no need to store it at all
@@ -96,6 +124,7 @@ func (fd *FormData) processControlDataWalkerF(e dhtml.ElementI, args ...any) {
 				delete(fd.controlsData, control.name)
 			}
 		} else {
+			//new control, set new control data for it
 			fd.controlsData[control.name] = control.data.getCopyPtr()
 		}
 

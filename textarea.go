@@ -11,7 +11,11 @@ func init() {
 		RenderF: func(control *FormControlElement) (out dhtml.HtmlPiece) {
 			rootTag := dhtml.Div()
 
-			if !control.label.IsEmpty() {
+			if control.data.isError {
+				rootTag.Styles(errorBlockStyle)
+			}
+
+			if !control.GetLabel().IsEmpty() {
 				rootTag.Append(control.renderLabel())
 			}
 

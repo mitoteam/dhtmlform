@@ -8,7 +8,9 @@ import (
 // Form control data to be stored in FormData between builds
 type FormControlData struct {
 	controlKind string
+	label       dhtml.HtmlPiece
 	value       any
+	isError     bool
 }
 
 // creates a copy of FormControlData and returns its pointer
@@ -19,10 +21,9 @@ func (fcd *FormControlData) getCopyPtr() *FormControlData {
 }
 
 type FormControlElement struct {
-	id    string
-	name  string
-	label dhtml.HtmlPiece
-	note  dhtml.HtmlPiece
+	id   string
+	name string
+	note dhtml.HtmlPiece
 
 	//additional properties
 	props mttools.Values
@@ -54,8 +55,12 @@ func (e *FormControlElement) Default(v any) *FormControlElement {
 }
 
 func (e *FormControlElement) Label(v any) *FormControlElement {
-	e.label.Append(v)
+	e.data.label.Append(v)
 	return e
+}
+
+func (e *FormControlElement) GetLabel() *dhtml.HtmlPiece {
+	return &e.data.label
 }
 
 func (e *FormControlElement) Note(v any) *FormControlElement {
@@ -81,7 +86,7 @@ func (e *FormControlElement) GetTags() dhtml.TagList {
 
 func (e *FormControlElement) renderLabel() *dhtml.LabelElement {
 	return dhtml.NewLabel().For(e.GetId()).Styles("font-weight: bolder; vertical-align: top").
-		Append(e.label)
+		Append(e.GetLabel())
 }
 
 func (e *FormControlElement) renderNote() *dhtml.Tag {

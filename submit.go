@@ -16,10 +16,10 @@ func init() {
 				tag.Attribute("name", control.name).Attribute("value", mttools.AnyToString(control.data.value))
 			}
 
-			if control.label.IsEmpty() {
+			if control.GetLabel().IsEmpty() {
 				tag.Append("Submit")
 			} else {
-				tag.Append(control.label)
+				tag.Append(control.GetLabel())
 			}
 
 			out.Append(tag)
