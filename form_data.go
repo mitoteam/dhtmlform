@@ -43,7 +43,16 @@ func (fd *FormData) GetParam(name string) any {
 	return fd.params.Get(name)
 }
 
+func (fd *FormData) SetParam(name string, value any) {
+	fd.params.Set(name, value)
+}
+
+// Shorthand for GetControlValue(name)
 func (fd *FormData) GetValue(name string) any {
+	return fd.GetControlValue(name)
+}
+
+func (fd *FormData) GetControlValue(name string) any {
 	if controlDataPtr, ok := fd.controlsData[name]; ok {
 		return controlDataPtr.value
 	}
@@ -51,7 +60,7 @@ func (fd *FormData) GetValue(name string) any {
 	return nil
 }
 
-func (fd *FormData) SetValue(name string, v any) *FormData {
+func (fd *FormData) SetControlValue(name string, v any) *FormData {
 	if controlDataPtr, ok := fd.controlsData[name]; ok {
 		controlDataPtr.value = v
 	}
