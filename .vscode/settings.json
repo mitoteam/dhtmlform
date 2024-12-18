@@ -3,6 +3,7 @@
         "dhtml",
         "dhtmlform",
         "mitoteam",
-        "mttools"
+        "mttools",
+        "textinput"
     ]
 }

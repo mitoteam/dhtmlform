@@ -2,12 +2,13 @@ package dhtmlform
 
 import (
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/mttools"
 )
 
-const textareaControlKind = "textarea"
+const inputControlKind = "textinput"
 
 func init() {
-	RegisterFormControlHandler(textareaControlKind, &FormControlHandler{
+	RegisterFormControlHandler(inputControlKind, &FormControlHandler{
 		RenderF: func(control *FormControlElement) (out dhtml.HtmlPiece) {
 			rootTag := dhtml.Div()
 
@@ -20,7 +21,8 @@ func init() {
 			}
 
 			rootTag.Append(
-				dhtml.NewTag("textarea").Id(control.GetId()).Attribute("name", control.Name).Append(control.GetValue()),
+				dhtml.NewTag("input").Id(control.GetId()).Attribute("type", "text").
+					Attribute("name", control.Name).Attribute("value", mttools.AnyToString(control.GetValue())),
 			)
 
 			if !control.note.IsEmpty() {
@@ -33,6 +35,6 @@ func init() {
 	})
 }
 
-func NewTextarea(name string) *FormControlElement {
-	return NewFormControl(textareaControlKind, name)
+func NewTextInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name)
 }

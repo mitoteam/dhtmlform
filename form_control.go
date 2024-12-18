@@ -2,7 +2,6 @@ package dhtmlform
 
 import (
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/mttools"
 )
 
 // Form control data to be stored in FormData between builds
@@ -24,11 +23,8 @@ func (fcd *FormControlData) getCopyPtr() *FormControlData {
 
 type FormControlElement struct {
 	id   string
-	name string
+	Name string
 	note dhtml.HtmlPiece
-
-	//additional properties
-	props mttools.Values
 
 	data FormControlData
 }
@@ -41,9 +37,8 @@ func NewFormControl(controlKind string, name string) *FormControlElement {
 	}
 
 	return &FormControlElement{
-		name:  name,
-		id:    dhtml.SafeId("id_" + controlKind + "_" + name),
-		props: mttools.NewValues(),
+		Name: name,
+		id:   dhtml.SafeId("id_" + controlKind + "_" + name),
 
 		data: FormControlData{
 			controlKind: controlKind,
@@ -51,9 +46,14 @@ func NewFormControl(controlKind string, name string) *FormControlElement {
 	}
 }
 
+// Sets default control value. Used only for initial form build. Replaced by POST value when re-builds.
 func (e *FormControlElement) Default(v any) *FormControlElement {
 	e.data.value = v
 	return e
+}
+
+func (e *FormControlElement) GetValue() any {
+	return e.data.value
 }
 
 func (e *FormControlElement) Label(v any) *FormControlElement {
