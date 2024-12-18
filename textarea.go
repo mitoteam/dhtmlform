@@ -16,7 +16,9 @@ func init() {
 					Class("fc-label").Append(control.label))
 			}
 
-			rootTag.Append(dhtml.NewTag("textarea").Id(control.GetId()).Append(control.data.value))
+			rootTag.Append(
+				dhtml.NewTag("textarea").Id(control.GetId()).Attribute("name", control.name).Append(control.data.value),
+			)
 
 			if !control.note.IsEmpty() {
 				rootTag.Append(dhtml.Div().Append(dhtml.NewTag("small").Append(control.note)))

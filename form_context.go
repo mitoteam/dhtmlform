@@ -48,3 +48,47 @@ func (fc *FormContext) SetRedirect(url string) *FormContext {
 	fc.redirectUrl = url
 	return fc
 }
+
+// Check build_id in POST values, try to find form data in data store, re-hydrate it with submitted values and return.
+// Returns nil if there is no FormData to rebuild.
+func (fc *FormContext) formDataFromPOST() (fd *FormData) {
+	build_id := fc.r.PostFormValue(hiddenBuildIdFieldName)
+
+	// check if it is being re-build (from POST request)
+	if build_id == "" {
+		return nil
+	}
+
+	// check if build_id is in store
+	fd, ok := formDataStore[build_id]
+	if !ok {
+		return nil
+	}
+
+	//refresh params from context
+	fd.params.CopyFrom(fc.params)
+
+	//re-hydrate form_data.values from POST data
+	for name, controlData := range fd.controlsData {
+		controlData.value = nil
+
+		if rawPostValue, ok := fc.r.PostForm[name]; ok {
+			if len(rawPostValue) == 1 { //array of single element, just take first one
+				controlData.value = rawPostValue[0]
+			} else {
+				controlData.value = rawPostValue
+			}
+		}
+
+		if handler, ok := GetFormControlHandler(controlData.controlKind); ok {
+			if handler.ProcessPostValueF != nil {
+				controlData.value = handler.ProcessPostValueF(controlData.value)
+			}
+		}
+
+		//set it back to FormData
+		fd.controlsData[name] = controlData
+	}
+
+	return fd
+}

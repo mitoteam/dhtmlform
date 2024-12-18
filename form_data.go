@@ -1,6 +1,7 @@
 package dhtmlform
 
 import (
+	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mttools"
 )
 
@@ -26,5 +27,53 @@ func NewFormData() *FormData {
 		args:         mttools.NewValues(),
 		params:       mttools.NewValues(),
 		controlsData: make(map[string]FormControlData),
+	}
+}
+
+func (fd *FormData) GetArg(name string) any {
+	return fd.args.Get(name)
+}
+
+func (fd *FormData) GetParam(name string) any {
+	return fd.params.Get(name)
+}
+
+/*
+	func (fd *FormData) GetValue(name string) any {
+		return fd.values.Get(name)
+	}
+
+	func (fd *FormData) SetValue(name string, v any) *FormData {
+		fd.values.Set(name, v)
+		return fd
+	}
+*/
+
+func (fd *FormData) IsRebuild() bool {
+	return fd.rebuild
+}
+
+func (fd *FormData) SetRebuild(v bool) {
+	fd.rebuild = v
+}
+
+func (fd *FormData) GetRedirect() string {
+	return fd.redirectUrl
+}
+
+func (fd *FormData) SetRedirect(url string) {
+	fd.redirectUrl = url
+}
+
+// Walker function to set control values from FormData if form being rebuild after post
+func (fd *FormData) processControlDataWalkerF(e dhtml.ElementI, args ...any) {
+	if control, ok := e.(*FormControlElement); ok {
+		if storedData, ok := fd.controlsData[control.name]; ok && storedData.controlKind == control.data.controlKind {
+			control.data = storedData
+		} else {
+			fd.controlsData[control.name] = control.data
+		}
+
+		//control.Note(fmt.Sprintf("DBG: processControlDataWalkerF Walked, rebuild: %t", fd.rebuild))
 	}
 }

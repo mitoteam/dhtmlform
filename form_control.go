@@ -32,7 +32,7 @@ func NewFormControl(controlKind string, name string) *FormControlElement {
 
 	return &FormControlElement{
 		name:  name,
-		id:    dhtml.SafeId("id_" + controlKind + name),
+		id:    dhtml.SafeId("id_" + controlKind + "_" + name),
 		props: mttools.NewValues(),
 
 		data: FormControlData{
