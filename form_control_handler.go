@@ -6,11 +6,14 @@ import (
 	"strings"
 
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/mttools"
 )
 
 type FormControlHandler struct {
-	RenderF func(props mttools.Values) dhtml.HtmlPiece
+	// [required] renders control
+	RenderF func(control *FormControlElement) dhtml.HtmlPiece
+
+	// [optional] preprocesses value from POST values
+	ProcessPostValueF func(rawValue any) any
 }
 
 var formControlHandlers map[string]*FormControlHandler
@@ -28,6 +31,10 @@ func RegisterFormControlHandler(controlKind string, handler *FormControlHandler)
 
 	if handler == nil {
 		panic("handler should not be nil")
+	}
+
+	if handler.RenderF == nil {
+		panic("handler.RenderF is not set")
 	}
 
 	if _, ok := formControlHandlers[controlKind]; ok {

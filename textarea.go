@@ -9,14 +9,20 @@ const textareaControlKind = "textarea"
 func init() {
 	RegisterFormControlHandler(textareaControlKind, &FormControlHandler{
 		RenderF: func(control *FormControlElement) (out dhtml.HtmlPiece) {
-			tag := dhtml.NewTag("textarea").Append(control.GetValue())
+			rootTag := dhtml.Div()
 
-			out.Append(tag)
-
-			if !control.note.IsEmpty() {
-				out.Append(dhtml.Div().Class("fc-note").Append(control.note))
+			if !control.label.IsEmpty() {
+				rootTag.Append(dhtml.NewTag("label").Attribute("for", control.GetId()).
+					Class("fc-label").Append(control.label))
 			}
 
+			rootTag.Append(dhtml.NewTag("textarea").Id(control.GetId()).Append(control.data.value))
+
+			if !control.note.IsEmpty() {
+				rootTag.Append(dhtml.Div().Append(dhtml.NewTag("small").Append(control.note)))
+			}
+
+			out.Append(rootTag)
 			return out
 		},
 	})

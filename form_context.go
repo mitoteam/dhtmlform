@@ -6,12 +6,14 @@ import (
 	"github.com/mitoteam/mttools"
 )
 
+// Initial data to build a form
 type FormContext struct {
 	params      mttools.Values // copied to form data each time form is rendered (even if it is being rebuild)
 	args        mttools.Values // copied to form data on first build only and stored between builds
-	w           http.ResponseWriter
-	r           *http.Request
-	redirectUrl string // issue an redirect to this URL (FormData redirectUrl has priority)
+	redirectUrl string         // issue an redirect to this URL (FormData's redirectUrl has priority)
+
+	w http.ResponseWriter
+	r *http.Request
 }
 
 func NewFormContext(w http.ResponseWriter, r *http.Request) *FormContext {
