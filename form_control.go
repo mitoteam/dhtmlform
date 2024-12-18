@@ -11,6 +11,13 @@ type FormControlData struct {
 	value       any
 }
 
+// creates a copy of FormControlData and returns its pointer
+func (fcd *FormControlData) getCopyPtr() *FormControlData {
+	new_fcd := *fcd //simple value copy until we have primitives only in it
+
+	return &new_fcd
+}
+
 type FormControlElement struct {
 	id    string
 	name  string

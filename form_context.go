@@ -69,25 +69,22 @@ func (fc *FormContext) formDataFromPOST() (fd *FormData) {
 	fd.params.CopyFrom(fc.params)
 
 	//re-hydrate form_data.values from POST data
-	for name, controlData := range fd.controlsData {
-		controlData.value = nil
+	for name, controlDataPtr := range fd.controlsData {
+		controlDataPtr.value = nil // empty by default
 
 		if rawPostValue, ok := fc.r.PostForm[name]; ok {
 			if len(rawPostValue) == 1 { //array of single element, just take first one
-				controlData.value = rawPostValue[0]
+				controlDataPtr.value = rawPostValue[0]
 			} else {
-				controlData.value = rawPostValue
+				controlDataPtr.value = rawPostValue
 			}
 		}
 
-		if handler, ok := GetFormControlHandler(controlData.controlKind); ok {
+		if handler, ok := GetFormControlHandler(controlDataPtr.controlKind); ok {
 			if handler.ProcessPostValueF != nil {
-				controlData.value = handler.ProcessPostValueF(controlData.value)
+				controlDataPtr.value = handler.ProcessPostValueF(controlDataPtr.value)
 			}
 		}
-
-		//set it back to FormData
-		fd.controlsData[name] = controlData
 	}
 
 	return fd

@@ -65,8 +65,6 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 	form := dhtml.NewForm().
 		Append(NewHidden(hiddenBuildIdFieldName).Default(fd.build_id))
 
-	form.Append(dhtml.Dbg("%+v", fd.controlsData))
-
 	if fh.RenderF != nil {
 		fh.RenderF(&formBody, fd)
 		formBody.WalkR(fd.processControlDataWalkerF)

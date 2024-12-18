@@ -15,7 +15,7 @@ type FormData struct {
 	args   mttools.Values // copied from FormContext on first build only and stored between builds
 
 	//list of all form controls data: control name => Control element
-	controlsData map[string]FormControlData
+	controlsData map[string]*FormControlData
 
 	rebuild     bool   // flag to rebuild form with same data again
 	redirectUrl string // issue an redirect to this URL after processing
@@ -26,7 +26,7 @@ func NewFormData() *FormData {
 		build_id:     "fd_" + mttools.RandomString(64),
 		args:         mttools.NewValues(),
 		params:       mttools.NewValues(),
-		controlsData: make(map[string]FormControlData),
+		controlsData: make(map[string]*FormControlData),
 	}
 }
 
@@ -38,16 +38,21 @@ func (fd *FormData) GetParam(name string) any {
 	return fd.params.Get(name)
 }
 
-/*
-	func (fd *FormData) GetValue(name string) any {
-		return fd.values.Get(name)
+func (fd *FormData) GetValue(name string) any {
+	if controlDataPtr, ok := fd.controlsData[name]; ok {
+		return controlDataPtr.value
 	}
 
-	func (fd *FormData) SetValue(name string, v any) *FormData {
-		fd.values.Set(name, v)
-		return fd
+	return nil
+}
+
+func (fd *FormData) SetValue(name string, v any) *FormData {
+	if controlDataPtr, ok := fd.controlsData[name]; ok {
+		controlDataPtr.value = v
 	}
-*/
+
+	return fd
+}
 
 func (fd *FormData) IsRebuild() bool {
 	return fd.rebuild
@@ -68,10 +73,16 @@ func (fd *FormData) SetRedirect(url string) {
 // Walker function to set control values from FormData if form being rebuild after post
 func (fd *FormData) processControlDataWalkerF(e dhtml.ElementI, args ...any) {
 	if control, ok := e.(*FormControlElement); ok {
-		if storedData, ok := fd.controlsData[control.name]; ok && storedData.controlKind == control.data.controlKind {
-			control.data = storedData
+		if storedControlDataPtr, ok := fd.controlsData[control.name]; ok {
+			if storedControlDataPtr.controlKind == control.data.controlKind {
+				control.data = *storedControlDataPtr
+			} else {
+				// kind does not match, no need to store it at all
+				// https://stackoverflow.com/questions/23229975/is-it-safe-to-remove-selected-keys-from-map-within-a-range-loop
+				delete(fd.controlsData, control.name)
+			}
 		} else {
-			fd.controlsData[control.name] = control.data
+			fd.controlsData[control.name] = control.data.getCopyPtr()
 		}
 
 		//control.Note(fmt.Sprintf("DBG: processControlDataWalkerF Walked, rebuild: %t", fd.rebuild))
