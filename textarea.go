@@ -19,9 +19,14 @@ func init() {
 				rootTag.Append(control.renderLabel())
 			}
 
-			rootTag.Append(
-				dhtml.NewTag("textarea").Id(control.GetId()).Attribute("name", control.Name).Append(control.GetValue()),
-			)
+			textareaTag := dhtml.NewTag("textarea").Id(control.GetId()).Attribute("name", control.Name).
+				Append(control.GetValue())
+
+			if control.GetPlaceholder() != "" {
+				textareaTag.Attribute("placeholder", control.GetPlaceholder())
+			}
+
+			rootTag.Append(textareaTag)
 
 			if !control.note.IsEmpty() {
 				rootTag.Append(control.renderNote())

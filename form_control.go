@@ -22,9 +22,10 @@ func (fcd *FormControlData) getCopyPtr() *FormControlData {
 }
 
 type FormControlElement struct {
-	id   string
-	Name string
-	note dhtml.HtmlPiece
+	id          string
+	Name        string
+	placeholder string
+	note        dhtml.HtmlPiece
 
 	data FormControlData
 }
@@ -70,8 +71,14 @@ func (e *FormControlElement) IsError() bool {
 	return e.data.isError
 }
 
-func (e *FormControlElement) Required(b bool) *FormControlElement {
+func (e *FormControlElement) SetRequired(b bool) *FormControlElement {
 	e.data.isRequired = b
+	return e
+}
+
+// Shorthand for SetRequired(true)
+func (e *FormControlElement) Require() *FormControlElement {
+	e.data.isRequired = true
 	return e
 }
 
@@ -82,6 +89,15 @@ func (e *FormControlElement) IsRequired() bool {
 func (e *FormControlElement) Note(v any) *FormControlElement {
 	e.note.Append(v)
 	return e
+}
+
+func (e *FormControlElement) Placeholder(s string) *FormControlElement {
+	e.placeholder = s
+	return e
+}
+
+func (e *FormControlElement) GetPlaceholder() string {
+	return e.placeholder
 }
 
 func (e *FormControlElement) GetId() string {

@@ -20,10 +20,14 @@ func init() {
 				rootTag.Append(control.renderLabel())
 			}
 
-			rootTag.Append(
-				dhtml.NewTag("input").Id(control.GetId()).Attribute("type", "text").
-					Attribute("name", control.Name).Attribute("value", mttools.AnyToString(control.GetValue())),
-			)
+			inputTag := dhtml.NewTag("input").Id(control.GetId()).Attribute("type", "text").
+				Attribute("name", control.Name).Attribute("value", mttools.AnyToString(control.GetValue()))
+
+			if control.GetPlaceholder() != "" {
+				inputTag.Attribute("placeholder", control.GetPlaceholder())
+			}
+
+			rootTag.Append(inputTag)
 
 			if !control.note.IsEmpty() {
 				rootTag.Append(control.renderNote())
