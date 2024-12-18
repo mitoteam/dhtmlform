@@ -15,18 +15,23 @@ type FormData struct {
 	args   mttools.Values // copied from FormContext on first build only and stored between builds
 
 	//list of all form controls data: control name => Control element
-	controlsData map[string]*FormControlData
+	controlsData formControlsDataT
+
+	errors FormErrorsT
 
 	rebuild     bool   // flag to rebuild form with same data again
 	redirectUrl string // issue an redirect to this URL after processing
 }
+
+type formControlsDataT map[string]*FormControlData
 
 func NewFormData() *FormData {
 	return &FormData{
 		build_id:     "fd_" + mttools.RandomString(64),
 		args:         mttools.NewValues(),
 		params:       mttools.NewValues(),
-		controlsData: make(map[string]*FormControlData),
+		controlsData: make(formControlsDataT),
+		errors:       make(FormErrorsT),
 	}
 }
 
@@ -68,6 +73,15 @@ func (fd *FormData) GetRedirect() string {
 
 func (fd *FormData) SetRedirect(url string) {
 	fd.redirectUrl = url
+}
+
+func (fd *FormData) ClearErrors() *FormData {
+	fd.errors = make(FormErrorsT) //new empty map
+	return fd
+}
+
+func (fd *FormData) HasError() bool {
+	return len(fd.errors) > 0
 }
 
 // Walker function to set control values from FormData if form being rebuild after post

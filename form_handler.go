@@ -23,18 +23,24 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 	if fd != nil { //found in POST values and data store
 		fd.redirectUrl = ""
 		fd.rebuild = false
-		//TODO: clear errors
+		fd.ClearErrors()
 
-		fh.ValidateF(fd)
-
-		if true { //TODO: fd.HasError() {
-			//TODO: formOut.Append(settings.FormErrorsRendererF(fd))
-			fd.rebuild = true //and display form again
-		} else {
-			//there were no errors
-			fh.SubmitF(fd)
+		if fh.ValidateF != nil {
+			fh.ValidateF(fd)
 		}
 
+		if fd.HasError() {
+			//TODO: formOut.Append(settings.FormErrorsRendererF(fd))
+			fd.rebuild = true //and display form again
+		}
+
+		if !fd.rebuild {
+			if fh.SubmitF != nil {
+				fh.SubmitF(fd)
+			}
+		}
+
+		//rebuilt flag can be set in SubmitF() so check it again
 		if !fd.rebuild {
 			delete(formDataStore, fd.build_id)
 
