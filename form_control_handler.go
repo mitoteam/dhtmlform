@@ -21,10 +21,6 @@ type FormControlHandler struct {
 
 var formControlHandlers map[string]*FormControlHandler
 
-func init() {
-	formControlHandlers = make(map[string]*FormControlHandler)
-}
-
 func RegisterFormControlHandler(controlKind string, handler *FormControlHandler) {
 	controlKind = strings.TrimSpace(controlKind)
 
@@ -40,6 +36,10 @@ func RegisterFormControlHandler(controlKind string, handler *FormControlHandler)
 		panic("handler.RenderF is not set")
 	}
 
+	if formControlHandlers == nil {
+		formControlHandlers = make(map[string]*FormControlHandler)
+	}
+
 	if _, ok := formControlHandlers[controlKind]; ok {
 		panic(fmt.Sprintf("handler for '%s' already registered", controlKind))
 	}
@@ -48,6 +48,10 @@ func RegisterFormControlHandler(controlKind string, handler *FormControlHandler)
 }
 
 func GetFormControlHandler(controlKind string) (*FormControlHandler, bool) {
+	if formControlHandlers == nil {
+		formControlHandlers = make(map[string]*FormControlHandler)
+	}
+
 	if handler, ok := formControlHandlers[controlKind]; ok {
 		return handler, true
 	}

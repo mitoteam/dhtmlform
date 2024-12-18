@@ -28,6 +28,8 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 		fd.ClearErrors()
 		fd.validateFormControls()
 
+		//rootTag.Append(dhtml.Dbg("%+v", fd))
+
 		// custom form handler validations
 		if fh.ValidateF != nil {
 			fh.ValidateF(fd)
