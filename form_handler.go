@@ -76,7 +76,7 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 	}
 
 	//<form> tag
-	form := dhtml.NewForm().
+	form := dhtml.NewForm().Method("post").
 		Append(NewHidden(hiddenBuildIdFieldName).Default(fd.build_id))
 
 	if fh.RenderF != nil {
