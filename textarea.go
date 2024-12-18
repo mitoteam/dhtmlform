@@ -20,7 +20,7 @@ func init() {
 			)
 
 			if !control.note.IsEmpty() {
-				rootTag.Append(dhtml.Div().Append(dhtml.NewTag("small").Append(control.note)))
+				rootTag.Append(control.renderNote())
 			}
 
 			out.Append(rootTag)

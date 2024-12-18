@@ -80,5 +80,10 @@ func (e *FormControlElement) GetTags() dhtml.TagList {
 }
 
 func (e *FormControlElement) renderLabel() *dhtml.LabelElement {
-	return dhtml.NewLabel().For(e.GetId()).Append(e.label)
+	return dhtml.NewLabel().For(e.GetId()).Styles("font-weight: bolder; vertical-align: top").
+		Append(e.label)
+}
+
+func (e *FormControlElement) renderNote() *dhtml.Tag {
+	return dhtml.Div().Styles("color: grey; font-size: 85%;").Append(e.note)
 }
