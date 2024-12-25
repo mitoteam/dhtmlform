@@ -71,8 +71,8 @@ func (fh *FormHandler) Render(fc *FormContext) *dhtml.HtmlPiece {
 
 	if fd == nil {
 		fd = NewFormData()
-		fd.args.CopyFrom(fc.args)
-		fd.params.CopyFrom(fc.params)
+		fd.args.CopyFrom(&fc.args)
+		fd.params.CopyFrom(&fc.params)
 	}
 
 	//<form> tag

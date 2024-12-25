@@ -66,7 +66,7 @@ func (fc *FormContext) getFormDataFromPOST() (fd *FormData) {
 	}
 
 	//refresh params from context
-	fd.params.CopyFrom(fc.params)
+	fd.params.CopyFrom(&fc.params)
 
 	//re-hydrate form_data.values from POST data
 	for name, controlDataPtr := range fd.controlsData {

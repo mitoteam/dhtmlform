@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/mitoteam/dhtml v0.0.0-20241218154713-e5b8f4f01206
-	github.com/mitoteam/mttools v0.0.0-20241218140423-a3403a9ff8ad
+	github.com/mitoteam/mttools v1.0.0
 )
 
 require (
