@@ -27,16 +27,10 @@ func init() {
 			rootTag.Append(inputTag)
 
 			if !control.GetLabel().IsEmpty() {
-				labelOut := dhtml.NewLabel().For(control.GetId()).Append(control.GetLabel())
-
-				if control.IsRequired() {
-					labelOut.Append(dhtml.Span().Styles("color: red; font-weight: bolder;").Text("*"))
-				}
-
-				rootTag.Append(labelOut)
+				rootTag.Append(control.renderLabel())
 			}
 
-			if !control.note.IsEmpty() {
+			if !control.GetNote().IsEmpty() {
 				rootTag.Append(control.renderNote())
 			}
 
