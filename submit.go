@@ -12,7 +12,7 @@ func init() {
 		RenderF: func(control *FormControlElement) (out dhtml.HtmlPiece) {
 			tag := dhtml.NewTag("button").Attribute("type", "submit")
 
-			if control.data.value != nil {
+			if !mttools.IsEmpty(control.GetValue()) {
 				tag.Attribute("name", control.Name).Attribute("value", mttools.AnyToString(control.GetValue()))
 			}
 
