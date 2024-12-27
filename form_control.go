@@ -91,6 +91,10 @@ func (e *FormControlElement) Note(v any) *FormControlElement {
 	return e
 }
 
+func (e *FormControlElement) GetNote() *dhtml.HtmlPiece {
+	return &e.note
+}
+
 func (e *FormControlElement) Placeholder(s string) *FormControlElement {
 	e.placeholder = s
 	return e
