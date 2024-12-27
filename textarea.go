@@ -28,7 +28,7 @@ func init() {
 
 			rootTag.Append(textareaTag)
 
-			if !control.note.IsEmpty() {
+			if !control.GetNote().IsEmpty() {
 				rootTag.Append(control.renderNote())
 			}
 
