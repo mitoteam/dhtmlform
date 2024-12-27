@@ -20,7 +20,7 @@ func init() {
 				rootTag.Append(control.renderLabel())
 			}
 
-			inputTag := dhtml.NewTag("input").Id(control.GetId()).Attribute("type", "text").
+			inputTag := dhtml.NewTag("input").Id(control.GetId()).Attribute("type", control.GetProp("type").(string)).
 				Attribute("name", control.Name).Attribute("value", mttools.AnyToString(control.GetValue()))
 
 			if control.GetPlaceholder() != "" {
@@ -40,5 +40,33 @@ func init() {
 }
 
 func NewTextInput(name string) *FormControlElement {
-	return NewFormControl(inputControlKind, name)
+	return NewFormControl(inputControlKind, name).SetProp("type", "text")
+}
+
+func NewPasswordInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name).SetProp("type", "password")
+}
+
+func NewEmailInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name).SetProp("type", "email")
+}
+
+func NewDateInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name).SetProp("type", "date")
+}
+
+func NewNumberInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name).SetProp("type", "number")
+}
+
+func NewTelInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name).SetProp("type", "tel")
+}
+
+func NewTimeInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name).SetProp("type", "time")
+}
+
+func NewUrlInput(name string) *FormControlElement {
+	return NewFormControl(inputControlKind, name).SetProp("type", "url")
 }

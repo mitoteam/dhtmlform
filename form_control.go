@@ -120,6 +120,10 @@ func (e *FormControlElement) SetProp(key string, value any) *FormControlElement 
 	return e
 }
 
+func (e *FormControlElement) HasProp(key string) bool {
+	return e.props.Has(key)
+}
+
 func (e *FormControlElement) GetTags() dhtml.TagList {
 	var out dhtml.HtmlPiece
 
