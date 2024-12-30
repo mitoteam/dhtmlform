@@ -8,10 +8,10 @@ import (
 // Form control data to be stored in FormData between builds
 type FormControlData struct {
 	controlKind string
-	label       dhtml.HtmlPiece
-	isRequired  bool // value should be set
+	label       dhtml.HtmlPiece //how to refer eto this control when saying about it to user (in error message for example)
+	isRequired  bool            // value should be set
 
-	isError bool //flag indicating control has some errors from validation
+	isError bool //flag indicating control has some errors from validation (to be used in renderer)
 
 	Value any
 }
