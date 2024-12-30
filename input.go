@@ -21,7 +21,7 @@ func init() {
 			}
 
 			inputTag := dhtml.NewTag("input").Id(control.GetId()).Attribute("type", control.GetProp("type").(string)).
-				Attribute("name", control.Name).Attribute("value", mttools.AnyToString(control.GetValue()))
+				Attribute("name", control.GetName()).Attribute("value", mttools.AnyToString(control.GetValue()))
 
 			if control.GetPlaceholder() != "" {
 				inputTag.Attribute("placeholder", control.GetPlaceholder())

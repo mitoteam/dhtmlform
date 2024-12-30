@@ -18,7 +18,7 @@ func init() {
 			}
 
 			inputTag := dhtml.NewTag("input").Id(control.GetId()).Attribute("type", "checkbox").
-				Attribute("name", control.Name).Attribute("value", checkboxCheckedFormValue)
+				Attribute("name", control.GetName()).Attribute("value", checkboxCheckedFormValue)
 
 			if mttools.AnyToBool(control.GetValue()) {
 				inputTag.Attribute("checked", "")

@@ -23,10 +23,18 @@ func (fcd *FormControlData) getCopyPtr() *FormControlData {
 	return &new_fcd
 }
 
+type FormControlElementI interface {
+	dhtml.ElementI
+
+	GetName() string
+	GetControlData() *FormControlData
+	SetControlData(*FormControlData)
+}
+
 // default implementation of FormControlElementI
 type FormControlElement struct {
 	id          string
-	Name        string
+	name        string
 	placeholder string
 	note        dhtml.HtmlPiece
 	props       mttools.Values //custom properties
@@ -35,7 +43,7 @@ type FormControlElement struct {
 }
 
 // force interface implementation
-var _ dhtml.ElementI = (*FormControlElement)(nil)
+var _ FormControlElementI = (*FormControlElement)(nil)
 
 func NewFormControl(controlKind string, name string) *FormControlElement {
 	if _, ok := GetFormControlHandler(controlKind); !ok {
@@ -43,7 +51,7 @@ func NewFormControl(controlKind string, name string) *FormControlElement {
 	}
 
 	return &FormControlElement{
-		Name:  name,
+		name:  name,
 		id:    dhtml.SafeId("id_" + controlKind + "_" + name),
 		props: mttools.NewValues(),
 
@@ -51,6 +59,18 @@ func NewFormControl(controlKind string, name string) *FormControlElement {
 			controlKind: controlKind,
 		},
 	}
+}
+
+func (e *FormControlElement) GetName() string {
+	return e.name
+}
+
+func (e *FormControlElement) GetControlData() *FormControlData {
+	return &e.data
+}
+
+func (e *FormControlElement) SetControlData(data *FormControlData) {
+	e.data = *data
 }
 
 // Sets default control value. Used only for initial form build. Replaced by POST value when re-builds.

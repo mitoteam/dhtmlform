@@ -129,21 +129,27 @@ func (fd *FormData) validateFormControls() {
 
 // Walker function to set control values from FormData if form being rebuild after post
 func (fd *FormData) processControlDataWalkerF(e dhtml.ElementI, args ...any) {
-	if control, ok := e.(*FormControlElement); ok {
-		if storedControlDataPtr, ok := fd.controlsData[control.Name]; ok {
-			if storedControlDataPtr.controlKind == control.data.controlKind {
-				storedControlDataPtr.label = *control.GetLabel() //update label if changed since last build
-				control.data = *storedControlDataPtr
-			} else {
-				// kind does not match, no need to store it at all
-				// https://stackoverflow.com/questions/23229975/is-it-safe-to-remove-selected-keys-from-map-within-a-range-loop
-				delete(fd.controlsData, control.Name)
-			}
-		} else {
-			//new control, set new control data for it
-			fd.controlsData[control.Name] = control.data.getCopyPtr()
-		}
+	control, ok := e.(FormControlElementI)
 
-		//control.Note(fmt.Sprintf("DBG: processControlDataWalkerF Walked, rebuild: %t", fd.rebuild))
+	if !ok {
+		return
 	}
+
+	controlData := control.GetControlData()
+
+	if storedControlDataPtr, ok := fd.controlsData[control.GetName()]; ok {
+		//check control kind
+		if storedControlDataPtr.controlKind == controlData.controlKind {
+			storedControlDataPtr.label = controlData.label //update label if changed since last build
+			control.SetControlData(storedControlDataPtr)
+		} else {
+			// kind does not match, no need to store it at all
+			delete(fd.controlsData, control.GetName())
+		}
+	} else {
+		//new control, add new control data to store for it
+		fd.controlsData[control.GetName()] = controlData.getCopyPtr()
+	}
+
+	//control.Note(fmt.Sprintf("DBG: processControlDataWalkerF Walked, rebuild: %t", fd.rebuild))
 }

@@ -13,7 +13,7 @@ func init() {
 			tag := dhtml.NewTag("button").Attribute("type", "submit")
 
 			if !mttools.IsEmpty(control.GetValue()) {
-				tag.Attribute("name", control.Name).Attribute("value", mttools.AnyToString(control.GetValue()))
+				tag.Attribute("name", control.GetName()).Attribute("value", mttools.AnyToString(control.GetValue()))
 			}
 
 			if control.GetLabel().IsEmpty() {

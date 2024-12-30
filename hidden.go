@@ -12,7 +12,7 @@ func init() {
 		RenderF: func(control *FormControlElement) (out dhtml.HtmlPiece) {
 			out.Append(
 				dhtml.NewTag("input").Attribute("type", "hidden").
-					Attribute("name", control.Name).
+					Attribute("name", control.GetName()).
 					Attribute("value", mttools.AnyToString(control.GetValue())),
 			)
 
