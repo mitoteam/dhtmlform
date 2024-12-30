@@ -9,19 +9,21 @@ import (
 type FormControlData struct {
 	controlKind string
 	label       dhtml.HtmlPiece
-	value       any
 	isRequired  bool // value should be set
 
 	isError bool //flag indicating control has some errors from validation
+
+	Value any
 }
 
 // creates a copy of FormControlData and returns its pointer
 func (fcd *FormControlData) getCopyPtr() *FormControlData {
-	new_fcd := *fcd //simple value copy until we have primitives only in it
+	new_fcd := *fcd //simple value copy since we have primitive types only in it
 
 	return &new_fcd
 }
 
+// default implementation of FormControlElementI
 type FormControlElement struct {
 	id          string
 	Name        string
@@ -53,12 +55,12 @@ func NewFormControl(controlKind string, name string) *FormControlElement {
 
 // Sets default control value. Used only for initial form build. Replaced by POST value when re-builds.
 func (e *FormControlElement) Default(v any) *FormControlElement {
-	e.data.value = v
+	e.data.Value = v
 	return e
 }
 
 func (e *FormControlElement) GetValue() any {
-	return e.data.value
+	return e.data.Value
 }
 
 func (e *FormControlElement) Label(v any) *FormControlElement {

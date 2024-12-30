@@ -54,7 +54,7 @@ func (fd *FormData) GetValue(name string) any {
 
 func (fd *FormData) GetControlValue(name string) any {
 	if controlDataPtr, ok := fd.controlsData[name]; ok {
-		return controlDataPtr.value
+		return controlDataPtr.Value
 	}
 
 	return nil
@@ -62,7 +62,7 @@ func (fd *FormData) GetControlValue(name string) any {
 
 func (fd *FormData) SetControlValue(name string, v any) *FormData {
 	if controlDataPtr, ok := fd.controlsData[name]; ok {
-		controlDataPtr.value = v
+		controlDataPtr.Value = v
 	}
 
 	return fd
@@ -120,7 +120,7 @@ func (fd *FormData) ClearErrors() {
 func (fd *FormData) validateFormControls() {
 	for controlName, controlDataPtr := range fd.controlsData {
 		if controlDataPtr.isRequired {
-			if mttools.IsEmpty(controlDataPtr.value) {
+			if mttools.IsEmpty(controlDataPtr.Value) {
 				fd.SetError(controlName, "value is required")
 			}
 		}

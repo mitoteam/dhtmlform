@@ -12,8 +12,8 @@ type FormControlHandler struct {
 	// [required] renders control
 	RenderF func(control *FormControlElement) dhtml.HtmlPiece
 
-	// [optional] preprocesses value from POST values
-	ProcessPostValueF func(rawValue any) any
+	// [optional] preprocesses raw data from POST
+	ProcessPostValueF func(controlData *FormControlData)
 
 	// [optional] check preprocessed value, return (true, nil) or (false, <error output>)
 	//TODO: ValidateValueF func(value any) (ok bool, errorOut *dhtml.HtmlPiece)

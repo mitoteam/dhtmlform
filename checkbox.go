@@ -38,12 +38,8 @@ func init() {
 			return out
 		},
 
-		ProcessPostValueF: func(rawValue any) any {
-			if rawValue == checkboxCheckedFormValue {
-				return true
-			} else {
-				return mttools.AnyToBool(rawValue)
-			}
+		ProcessPostValueF: func(controlData *FormControlData) {
+			controlData.Value = controlData.Value == checkboxCheckedFormValue
 		},
 	})
 }
