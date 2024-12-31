@@ -13,14 +13,30 @@ type FormControlData struct {
 
 	isError bool //flag indicating control has some errors from validation (to be used in renderer)
 
+	props mttools.Values //custom properties
 	Value any
 }
 
 // creates a copy of FormControlData and returns its pointer
 func (fcd *FormControlData) getCopyPtr() *FormControlData {
-	new_fcd := *fcd //simple value copy since we have primitive types only in it
+	new_fcd := *fcd
+
+	new_fcd.props.CopyFrom(&fcd.props)
 
 	return &new_fcd
+}
+
+func (fcd *FormControlData) GetProp(key string) any {
+	return fcd.props.Get(key)
+}
+
+func (fcd *FormControlData) HasProp(key string) bool {
+	_, ok := fcd.props.GetOk(key)
+	return ok
+}
+
+func (fcd *FormControlData) SetProp(key string, value any) {
+	fcd.props.Set(key, value)
 }
 
 type FormControlElementI interface {
@@ -57,6 +73,7 @@ func NewFormControl(controlKind string, name string) *FormControlElement {
 
 		data: FormControlData{
 			controlKind: controlKind,
+			props:       mttools.NewValues(),
 		},
 	}
 }
