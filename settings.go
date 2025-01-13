@@ -25,7 +25,6 @@ func init() {
 			container := dhtml.Div().Styles(errorBlockStyle).Styles("margin-bottom: 10px; padding: 10px;")
 
 			for _, controlErrors := range *fe {
-
 				for _, controlError := range controlErrors.Errors {
 					errorOut := dhtml.Div()
 
