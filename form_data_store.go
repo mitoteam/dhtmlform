@@ -1,6 +1,7 @@
 package dhtmlform
 
 import (
+	"context"
 	"sync"
 	"time"
 
@@ -23,7 +24,6 @@ func init() {
 }
 
 // default implementation: very simple, primitive map based for now
-// TODO: simpleDataStore records expiration
 type simpleDataStore struct {
 	m sync.RWMutex
 
@@ -76,4 +76,22 @@ func (ds *simpleDataStore) Expire() {
 			delete(ds.store, build_id)
 		}
 	}
+}
+
+// Call this to start goroutine that will check and expire outdated formdata
+func StartFormDataExpirationHandler(ctx context.Context) {
+	//start in goroutine
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				// channel close, application is shutting down
+				return
+			default:
+			}
+
+			time.Sleep(60 * time.Second)
+			formDataStore.Expire()
+		}
+	}()
 }
