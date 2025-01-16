@@ -1,6 +1,8 @@
 package dhtmlform
 
 import (
+	"time"
+
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mttools"
 )
@@ -9,7 +11,8 @@ import (
 // Constructed on first render from FormContext, stored on server side.
 // Linked to browser representation by build_id.
 type FormData struct {
-	build_id string
+	build_id string    // unique string to identify form build
+	created  time.Time // time of form data creation (to be able to expire unused ones periodically)
 
 	params mttools.Values // copied from FormContext each time form is rendered (even if it is being rebuild)
 	args   mttools.Values // copied from FormContext on first build only and stored between builds
@@ -17,6 +20,7 @@ type FormData struct {
 	//list of all form controls data: control name => Control element
 	controlsData formControlsDataT
 
+	// form controls errors (if any werer set during validation)
 	errors FormErrors
 
 	rebuild     bool   // flag to rebuild form with same data again
@@ -28,6 +32,7 @@ type formControlsDataT map[string]*FormControlData
 func NewFormData() *FormData {
 	return &FormData{
 		build_id:     "fd_" + mttools.RandomString(64),
+		created:      time.Now(),
 		args:         mttools.NewValues(),
 		params:       mttools.NewValues(),
 		controlsData: make(formControlsDataT),
