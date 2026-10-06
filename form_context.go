@@ -10,7 +10,7 @@ import (
 type FormContext struct {
 	params      mttools.Values // copied to form data each time form is rendered (even if it is being rebuild)
 	args        mttools.Values // copied to form data on first build only and stored between builds
-	redirectUrl string         // issue an redirect to this URL (FormData's redirectUrl has priority)
+	redirectUrl string         // issue a redirect to this URL when rendering form (FormData's redirectUrl has priority), usually after submit
 
 	w http.ResponseWriter
 	r *http.Request
