@@ -65,7 +65,7 @@ func (ds *simpleDataStore) Remove(build_id string) {
 }
 
 func (ds *simpleDataStore) Expire() {
-	//one week by default
+	//one week
 	expireEdge := time.Now().Add(-7 * 24 * time.Hour)
 
 	ds.m.Lock()
@@ -76,6 +76,12 @@ func (ds *simpleDataStore) Expire() {
 			delete(ds.store, build_id)
 		}
 	}
+}
+
+// Call this time to time to clear outdated form data. Or call StartFormDataExpirationHandler() to start
+// per-minute goroutine doing this
+func ExpireFormData() {
+	formDataStore.Expire()
 }
 
 // Call this to start goroutine that will check and expire outdated formdata
@@ -91,7 +97,7 @@ func StartFormDataExpirationHandler(ctx context.Context) {
 			}
 
 			time.Sleep(60 * time.Second)
-			formDataStore.Expire()
+			ExpireFormData()
 		}
 	}()
 }
